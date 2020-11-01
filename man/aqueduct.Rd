@@ -41,7 +41,7 @@ respectively. Most of the time, the files will be in .csv format, but
 need to specify the extension. If the input files are not found in the
 the input directories, then the files are looked for in the sub directories
 of the input directories.
-\item \code{outdir} The name of the directory for the output file
+\item \code{outdir} The name of the directory for the output file.
 \item \code{out} The name of the output file created by \code{node}.
 \code{aqueduct()} is smart in that it determines the file format of the
 output and saves it as the appropriate file format. For the most part, the
@@ -49,7 +49,9 @@ file output will be a single .csv file. When the main function in
 \code{node} outputs a list of dataframe style objects, a .csv file is saved
 in \code{outdir} and the files are saved with the file name
 [name_in_list].csv where name_in_list is the name given for that object
-in the list. If the file is not a dataframe object, matrix, or vector, then
+in the list. When this is the case, specifying \code{outdir()}
+is sufficient.
+If the file is not a dataframe object, matrix, or vector, then
 the object will be saved as a .RData object.
 }
 }
@@ -102,7 +104,7 @@ on to the \code{node} file.
 
 # First, set paths using aqueduct_setup()
 aqueduct_setup(
-  basepath ~ C:/Users/Harvey/finding_groups
+  basepath = "C:/Users/Harvey/GitHub/aqueduct/examples/example1",
   raw      ~ basepath/data/raw,
   derived  ~ basepath/data/derived,
   current  ~ basepath/data/current,
@@ -110,6 +112,7 @@ aqueduct_setup(
 )
 # Then run the aqueduct workflow!
 aqueduct(
+  raw() ~ create_data(,seed=1996)
   derived(chars) ~ load_chars(raw(location_file) +
                               raw(race_file) +
                               raw(age_file) +
