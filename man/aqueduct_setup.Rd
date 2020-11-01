@@ -2,19 +2,33 @@
 % Please edit documentation in R/aqueduct_setup.R
 \name{aqueduct_setup}
 \alias{aqueduct_setup}
-\title{Run an aqueduct Workflow}
+\title{Set up aqueduct workflow}
 \usage{
-aqueduct_setup(...)
+aqueduct_setup(..., update = FALSE)
 }
 \arguments{
-\item{outdir(outdata)~nodename(dir1(indata1)+dir2(indata2)+...)}{A formula instructing which datasets (e.g. \code{indata1})
-a workflow node (\code{nodename}) accepts as input}
-}
-\value{
-A dataframe of all of the workflow nodes and if they have been
-activated
+\item{...}{Filepath formulas, separated by commas. There are two kinds of formulas.
+An exact formula should be given as a string. These work best for
+establishing the basepaths from the root of your system from which
+all other paths are derived. For example,
+\deqn{basepath = "C:/Users/example_user"}
+The formulas may also be given as relative paths, where the first level
+is derived from previously defined filepaths. For example,
+\deqn{datapath ~ basepath/data/raw}
+which would correspond to "C:/Users/example_user/data/raw"}
+
+\item{update}{\code{FALSE} by default. If \code{FALSE}, then a new environment is
+created and any previous filepaths are erased. If \code{TRUE} then any
+filepaths given will be added to the list of previous filepaths}
 }
 \description{
-This function runs the workflow provided in the arguments, ignoring
-components of the workflow (nodes) whose parent nodes have not changed
+This function establishes filepaths that are to be used in an
+aqueduct workflow by defining the filepaths and their names. Shorter names
+make more readable workflows. These filepaths are stored in a hidden
+aqueduct environment to avoid clutter (an environment that is established
+in this folder)
+}
+\examples{
+
+
 }

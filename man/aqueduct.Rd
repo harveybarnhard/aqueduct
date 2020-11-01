@@ -30,7 +30,8 @@ components of the workflow (nodes) whose parent nodes have not changed
 An individual formula is made up of the following components
 \itemize{
 \item \code{node} The name of the .R file as it exists in the code folder as
-defined in \code{\link{aqueduct_setup}()}. No the .R extension.
+defined in \code{\link{aqueduct_setup}()}. Do not include the .R file
+extension.
 \item \code{indir1, indir2} The names of the directories for the first and
 second input file where the names are defined in \code{\link{aqueduct_setup}()}
 \item \code{in1, in2} The names of the first and second input files, without
@@ -85,6 +86,7 @@ on to the \code{node} file.
 #    --------/analyze
 #    ------------/svm_classify.R
 #    ------------/create_plots.R
+#    ------------/produce_report.Rmd
 #    ----/data
 #    --------/raw
 #    ------------/main_db.csv
@@ -99,12 +101,12 @@ on to the \code{node} file.
 #    --------/plots
 
 # First, set paths using aqueduct_setup()
-basepath <- "C:/Users/Harvey/finding_groups"
 aqueduct_setup(
-  raw     = paste0(basepath, "/data/raw"),
-  derived = paste0(basepath, "/data/derived"),
-  current = paste0(basepath, "/data/current"),
-  plots   = paste0(basepath, "/output/plots")
+  basepath ~ C:/Users/Harvey/finding_groups
+  raw      ~ basepath/data/raw,
+  derived  ~ basepath/data/derived,
+  current  ~ basepath/data/current,
+  plots    ~ basepath/output/plots
 )
 # Then run the aqueduct workflow!
 aqueduct(
@@ -116,6 +118,7 @@ aqueduct(
   derived(db_w_chars) ~ add_chars(raw(main_db) + derived(clean_chars)),
   current(classified_groups) ~ svm_classify(derived(db_w_chars)),
   plots(classify_plots) ~ create_plots(current(classified_groups) +
-                                       derived(clean_chars)) 
+                                       derived(clean_chars)),
+  output(final_report)  ~ produce_report() 
 )
 }

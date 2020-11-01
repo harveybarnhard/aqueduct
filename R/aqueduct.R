@@ -19,7 +19,8 @@
 #' ## Formula Arguments
 #' An individual formula is made up of the following components
 #' * \code{node} The name of the .R file as it exists in the code folder as
-#'   defined in \code{\link{aqueduct_setup}()}. No the .R extension.
+#'   defined in \code{\link{aqueduct_setup}()}. Do not include the .R file
+#'   extension.
 #' * \code{indir1, indir2} The names of the directories for the first and
 #'   second input file where the names are defined in \code{\link{aqueduct_setup}()}
 #' * \code{in1, in2} The names of the first and second input files, without
@@ -69,6 +70,7 @@
 #' #    --------/analyze
 #' #    ------------/svm_classify.R
 #' #    ------------/create_plots.R
+#' #    ------------/produce_report.Rmd
 #' #    ----/data
 #' #    --------/raw
 #' #    ------------/main_db.csv
@@ -83,12 +85,12 @@
 #' #    --------/plots
 #' 
 #' # First, set paths using aqueduct_setup()
-#' basepath <- "C:/Users/Harvey/finding_groups"
 #' aqueduct_setup(
-#'   raw     = paste0(basepath, "/data/raw"),
-#'   derived = paste0(basepath, "/data/derived"),
-#'   current = paste0(basepath, "/data/current"),
-#'   plots   = paste0(basepath, "/output/plots")
+#'   basepath ~ C:/Users/Harvey/finding_groups
+#'   raw      ~ basepath/data/raw,
+#'   derived  ~ basepath/data/derived,
+#'   current  ~ basepath/data/current,
+#'   plots    ~ basepath/output/plots
 #' )
 #' # Then run the aqueduct workflow!
 #' aqueduct(
@@ -100,9 +102,26 @@
 #'   derived(db_w_chars) ~ add_chars(raw(main_db) + derived(clean_chars)),
 #'   current(classified_groups) ~ svm_classify(derived(db_w_chars)),
 #'   plots(classify_plots) ~ create_plots(current(classified_groups) +
-#'                                        derived(clean_chars)) 
+#'                                        derived(clean_chars)),
+#'   output(final_report)  ~ produce_report() 
 #' )
+
 aqueduct = function(..., verbose=FALSE){
-  arguments = list(...)
-  print(arguments)
+  formulae = list(output(y)~run_func(raw(x)+raw(z)))
+  for(i in 1:length(formulae)){
+    # Separate the left and right hand side of the formula
+    lhs = formulae[[i]][[2]]
+    rhs = formulae[[i]][[3]]
+    
+    # Run the code
+    if(any(flag)==FALSE){
+      objects_in_memory=ls()
+      # source(codepath, verbose=verbose)
+      rm(list=setdiff(ls(), objects_in_memory))
+    }
+  }
+  return(arguments)
 }
+
+# TODO Flush out this function so that it actually run codes
+# TODO Make the code run ONLY if the timestamps on the dependencies have changed
