@@ -171,3 +171,7 @@ aqueduct = function(..., verbose=FALSE){
   }
   return(arguments)
 }
+
+#TODO Finish making timesheet and see how it works
+#TODO Create example files to make sure they work
+#TODO Strava metro?
