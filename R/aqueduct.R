@@ -110,21 +110,34 @@
 #' )
 
 aqueduct = function(..., verbose=FALSE){
-  formulae = list(output(y)~run_func(raw(x)+raw(z)))
+  formulae = list(derived(y)~run_func(raw(create_x)+raw(create_z)))
   for(i in 1:length(formulae)){
     # Separate the left and right hand side of the formula
-    lhs = formulae[[i]][[2]]
-    rhs = formulae[[i]][[3]]
-    
+    lhs = format(formulae[[i]][[2]])
+    rhs = format(formulae[[i]][[3]])
+    # Parse the left hand side
+    outdir  = get(sub("^(.*?)\\(.+", "\\1", lhs),
+                  envir=.aqueduct_env)
+    outfile = regmatches(lhs, gregexpr("(?<=\\().*?(?=\\))", lhs, perl=T))[[1]]
+      
+    # Parse the right hand side
+    codefile = sub("^(.*?)\\(.+", "\\1", rhs)
+    infiles  = sub(paste0("^",codefile,"\\((.*)\\)"), "\\1", rhs)
+    infiles  = strsplit(infiles, split="\\+")[[1]]
+    infiles  = sub("\\s", "", infiles)
+    inpaths  = unlist(mget(gsub("^(.*?)\\(.+", "\\1", infiles),
+                           envir=.aqueduct_env))
+    infiles  = unlist(regmatches(infiles, gregexpr("(?<=\\().*?(?=\\))",
+                                                   infiles,
+                                                   perl=T)))
+    # Search for code file in basepath
     # Run the code
     if(any(flag)==FALSE){
       objects_in_memory=ls()
       # source(codepath, verbose=verbose)
       rm(list=setdiff(ls(), objects_in_memory))
+      gc()
     }
   }
   return(arguments)
 }
-
-# TODO Flush out this function so that it actually run codes
-# TODO Make the code run ONLY if the timestamps on the dependencies have changed

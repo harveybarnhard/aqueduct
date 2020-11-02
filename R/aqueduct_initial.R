@@ -21,7 +21,7 @@
 #'     project. The choice of this parameter has little practical implications
 #'     other than to make statements printed from aqueduct() more informative
 #' 
-#' 
+
 aqueduct_initial = function(basepath, ..., projname){
   # Create folder if it does not already exist
   dir.create(file.path(basepath, ".aqueduct"), showWarnings=FALSE)
@@ -38,8 +38,10 @@ aqueduct_initial = function(basepath, ..., projname){
     # Create new aqueduct timesheet
     timesheet = data.frame(
       node = NA,
-      last_timestamp
+      last_timestamp = NA,
+      curr_timestamp = NA
     )
+    local(timesheet <- timesheet, envir=.aqueduct_env)
   }else{
     .aqueduct_env <<- readRDS(filename)
   }
