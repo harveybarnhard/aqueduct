@@ -130,6 +130,35 @@ aqueduct = function(..., verbose=FALSE){
     infiles  = unlist(regmatches(infiles, gregexpr("(?<=\\().*?(?=\\))",
                                                    infiles,
                                                    perl=T)))
+    # Make sure files exist, then pull their timestamps
+    if(length(infiles)!=length(inpaths)){
+      stop("Right hand side of formula ", i, " contains an error.")
+    }
+    timesheet = local(timesheet, envir=.aqueduct_env)
+    for(j in 1:length(infiles)){
+      path = file.path(inpaths[j], paste0(infiles[j], ".csv"))
+      if(!file.exists(path)){
+        stop(paste0("File ", infiles[j], " in formula ", i, " not found in ",
+                    "directory ", inpaths[j]))
+      }
+      if(path%in%timesheet$path){
+        timesheet[timesheet$path==path,]$curr_timestamp = file.mtime(path)
+      }else{
+        new_row = nrow(timesheet)+1
+        timesheet[new_row,]$node_type = "data"
+        timesheet[new_row,]$name  = infiles[j]
+        timesheet[new_row,]$last_timestamp = as.POSIXct(NA)
+        timesheet[new_row,]$curr_timestamp = as.POSIXct(file.mtime(path))
+        timesheet[new_row,]$path = path
+        new_entry = c(path,
+                      "data",
+                      infiles[j],
+                      as.POSIXct(NA),
+                      as.POSIXct(file.mtime(path)))
+        names(new_entry) = colnames(timesheet)
+        timesheet = rbind(timesheet, new_entry)
+      }
+    }
     # Search for code file in basepath
     # Run the code
     if(any(flag)==FALSE){

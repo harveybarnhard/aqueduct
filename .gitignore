@@ -1,2 +1,3 @@
 .Rproj.user
 examples/example1/.aqueduct/aqueduct_env.rds
+*.csv

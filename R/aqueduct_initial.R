@@ -37,11 +37,15 @@ aqueduct_initial = function(basepath, ..., projname){
     saveRDS(.aqueduct_env, filename)
     # Create new aqueduct timesheet
     timesheet = data.frame(
-      node = NA,
-      last_timestamp = NA,
-      curr_timestamp = NA
+      node_type = character(),
+      parent_dir = character(),
+      name = character(),
+      last_timestamp = as.POSIXct(double()),
+      curr_timestamp = as.POSIXct(double()),
+      path = character()
+      stringsAsFactors = FALSE
     )
-    local(timesheet <- timesheet, envir=.aqueduct_env)
+    assign("timesheet", timesheet, envir=.aqueduct_env)
   }else{
     .aqueduct_env <<- readRDS(filename)
   }
