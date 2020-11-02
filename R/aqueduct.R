@@ -146,6 +146,7 @@ aqueduct = function(..., verbose=FALSE){
       }else{
         new_row = nrow(timesheet)+1
         timesheet[new_row,]$node_type = "data"
+        timesheet[new_row,]$parent_dir = names(inpaths)[j]
         timesheet[new_row,]$name  = infiles[j]
         timesheet[new_row,]$last_timestamp = as.POSIXct(NA)
         timesheet[new_row,]$curr_timestamp = as.POSIXct(file.mtime(path))
